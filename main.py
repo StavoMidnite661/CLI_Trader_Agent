@@ -2,23 +2,15 @@
 import argparse
 import asyncio
 import pandas as pd
-
 from orchestrator import Orchestrator
 from backtester import VectorBacktester
 
 def run_live():
-    """
-    Initializes and runs the live trading orchestrator.
-    """
     print("--- Starting LIVE Trading Mode ---")
     try:
-        # Define the instruments we want to trade
         instruments_to_trade = ["EUR_USD", "USD_JPY", "GBP_USD"]
-        
-        # Create and run the orchestrator
         orchestrator = Orchestrator(instruments=instruments_to_trade)
         asyncio.run(orchestrator.run())
-        
     except KeyboardInterrupt:
         print("\nLive mode stopped by user.")
     except Exception as e:
@@ -70,19 +62,13 @@ def run_backtest():
 
 
 def main():
-    """
-    Main entry point for the application.
-    Parses command-line arguments to determine the run mode.
-    """
     parser = argparse.ArgumentParser(description="OANDA Multi-Agent Trading System")
     parser.add_argument(
         "mode",
         choices=["live", "backtest"],
         help="The mode to run the application in: 'live' for live trading, 'backtest' for a sample backtest."
     )
-    
     args = parser.parse_args()
-    
     if args.mode == "live":
         run_live()
     elif args.mode == "backtest":
