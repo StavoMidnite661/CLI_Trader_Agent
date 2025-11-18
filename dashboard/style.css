@@ -7,6 +7,8 @@ body {
   font-family: 'Playfair Display', serif;
   overflow: hidden;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Ari Kytsya full-screen wallpaper */
@@ -27,8 +29,9 @@ body {
 /* Penthouse header */
 .penthouse-header {
   text-align: center;
-  padding: 3vh 0;
+  padding: 1rem 0;
   z-index: 10;
+  flex-shrink: 0;
 }
 .glitch-title {
   font-family: 'Cinzel Decorative', cursive;
@@ -50,17 +53,19 @@ body {
 .harem-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1rem;
   max-width: 1900px;
   margin: 0 auto;
+  flex-grow: 1;
+  height: calc(100vh - 120px); /* Adjust 120px based on header height */
 }
 .card {
   background: rgba(20,0,30,0.4);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255,0,102,0.6);
   border-radius: 20px;
-  padding: 1.8rem;
+  padding: 1rem;
   box-shadow:
     0 0 40px rgba(255,0,102,0.4),
     inset 0 0 60px rgba(255,0,102,0.1);
@@ -85,7 +90,7 @@ body {
 .empire-card   { grid-column: span 12; text-align:center; font-size:2rem; }
 .positions-card{ grid-column: span 7; }
 .pending-card  { grid-column: span 5; }
-.terminal-card { grid-column: span 12; min-height: 420px; }
+.terminal-card { grid-column: span 12; display: flex; flex-direction: column; }
 .agents-card   { grid-column: span 12; }
 
 /* Money shot */
@@ -109,12 +114,12 @@ body {
   border: 1px solid #ff0066;
   border-radius: 12px;
   padding: 1rem;
-  height: 340px;
   overflow-y: auto;
   font-family: 'Courier New', monospace;
   color: #ff0066;
   text-shadow: 0 0 10px #ff0066;
   line-height: 1.8;
+  flex-grow: 1;
 }
 .pulse-red {
   background: #ff0066;
