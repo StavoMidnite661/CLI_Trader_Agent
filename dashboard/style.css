@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Cinzel+Decorative:wght@900&family=Playfair+Display:wght@700&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #000;
+  color: #ff0066;
+  font-family: 'Playfair Display', serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Ari Kytsya full-screen wallpaper */
+.ari-bg {
+  position: fixed;
+  inset: 0;
+  background: url('https://i.imgur.com/2kF9v8K.jpeg') center/cover no-repeat; /* Ari in black two-piece */
+  filter: brightness(0.4) contrast(1.2) blur(1px);
+  z-index: -3;
+}
+.red-vignette {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, #000 80%);
+  z-index: -2;
+}
+
+/* Penthouse header */
+.penthouse-header {
+  text-align: center;
+  padding: 3vh 0;
+  z-index: 10;
+}
+.glitch-title {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 7vw;
+  background: linear-gradient(90deg, #ff0066, #ff00cc, #ffd700);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255,0,102,0.8);
+}
+.ckcy-gold {
+  color: #ffd700;
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  text-shadow: 0 0 20px gold;
+}
+
+/* Glassmorphism cards with red neon border */
+.harem-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1900px;
+  margin: 0 auto;
+}
+.card {
+  background: rgba(20,0,30,0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,0,102,0.6);
+  border-radius: 20px;
+  padding: 1.8rem;
+  box-shadow:
+    0 0 40px rgba(255,0,102,0.4),
+    inset 0 0 60px rgba(255,0,102,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,0,102,0.2), transparent);
+  pointer-events: none;
+}
+.card h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #ff0066;
+  text-shadow: 0 0 20px #ff0066;
+  letter-spacing: 3px;
+}
+
+/* Layout */
+.empire-card   { grid-column: span 12; text-align:center; font-size:2rem; }
+.positions-card{ grid-column: span 7; }
+.pending-card  { grid-column: span 5; }
+.terminal-card { grid-column: span 12; min-height: 420px; }
+.agents-card   { grid-column: span 12; }
+
+/* Money shot */
+.money-shot {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9vw;
+  font-weight: 900;
+  background: linear-gradient(90deg, #ff0066, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255,215,0,0.6);
+}
+.delta {
+  font-size: 3vw;
+  color: #00ff99;
+}
+
+/* Sexy terminal */
+.sexy-terminal {
+  background: rgba(0,0,0,0.8);
+  border: 1px solid #ff0066;
+  border-radius: 12px;
+  padding: 1rem;
+  height: 340px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  color: #ff0066;
+  text-shadow: 0 0 10px #ff0066;
+  line-height: 1.8;
+}
+.pulse-red {
+  background: #ff0066;
+  box-shadow: 0 0 20px #ff0066;
+  animation: moan 1.5s infinite;
+}
+@keyframes moan { 0%,100% { opacity:1; } 50% { opacity:0.4; }}
+
+/* Glowing agent orbs */
+.orb.online {
+  display: inline-block;
+  width: 14px; height: 14px;
+  background: #ff0066;
+  border-radius: 50%;
+  box-shadow: 0 0 30px #ff0066;
+  animation: throb 2s infinite;
+}
+@keyframes throb { 0% { transform:scale(1); } 50% { transform:scale(1.4); } 100% { transform:scale(1); }}
+
+/* Mobile fallback */
+@media (max-width: 1100px) {
+  .positions-card, .pending-card { grid-column: span 12; }
+  .glitch-title { font-size: 12vw; }
+}
