@@ -25,6 +25,12 @@ class Orchestrator:
         self.stream_hub = StreamHub(instruments=self.instruments)
         self.order_manager = InMemoryOrderManager()
         self.connected_clients = set()
+        # Define the agent personas
+        self.agents = [
+            {"name": "MACROQUANT", "status": "online"},
+            {"name": "VOLSCALPER", "status": "online"},
+            {"name": "SENTIMENTSCOUT", "status": "online"}
+        ]
         self._setup_subscriptions()
         self._start_http_server()
         print("Orchestrator initialized.")
@@ -40,11 +46,15 @@ class Orchestrator:
 
     async def _websocket_handler(self, websocket, path):
         self.connected_clients.add(websocket)
+        print(f"Dashboard client connected. Sending initial agent status.")
+        # Send the initial agent status upon connection
+        await websocket.send(json.dumps({"type": "agent_status", "data": self.agents}))
         try:
             async for message in websocket:
                 print(f"Received message from dashboard: {message}")
         finally:
             self.connected_clients.remove(websocket)
+            print(f"Dashboard client disconnected.")
 
     async def broadcast(self, message: dict):
         if self.connected_clients:
@@ -67,7 +77,7 @@ class Orchestrator:
         websocket_server = await websockets.serve(
             self._websocket_handler, self.ws_host, self.ws_port
         )
-        print(f"SUCCESS: WebSocket server is live → ws://{self.ws_host}:{self.ws_port}")
+        print(f"SUCCESS: WebSocket server is live at ws://{self.ws_host}:{self.ws_port}")
         
         async def safe_stream_hub():
             try:

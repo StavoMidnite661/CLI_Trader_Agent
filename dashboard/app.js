@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pendingTradesContainer = document.getElementById('pending-trades');
     const totalPnlElement = document.getElementById('total-pnl');
     const pnlDeltaElement = document.getElementById('pnl-delta');
+    const agentGridContainer = document.querySelector('.agent-grid'); // Get the agent grid container
 
     ws.onopen = () => console.log('WebSocket connection established');
     ws.onclose = () => console.log('WebSocket connection closed');
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             switch (message.type) {
                 case 'price':
-                    renderPrice(message.data);
+                    renderPrice(message); // Pass the whole message
                     break;
                 case 'position_update':
                     renderPositions(message.data);
@@ -29,30 +30,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'pending_trade':
                     renderPendingTrade(message.data);
                     break;
+                case 'agent_status': // New case for agent status
+                    renderAgentStatus(message.data);
+                    break;
                 default:
-                    console.warn('Unknown message type:', message.type);
+                    // It's a price event if it has 'instrument' and 'bids'
+                    if (message.instrument && message.bids) {
+                        renderPrice(message);
+                    } else {
+                        console.warn('Unknown message type:', message.type);
+                    }
             }
         } catch (error) {
             console.error('Error parsing WebSocket message:', error);
         }
     };
 
-// Make every price tick feel like a heartbeat
-function renderPrice(data) {
-  const line = document.createElement('div');
-  const change = ((data.asks[0].price - data.bids[0].price) / data.bids[0].price * 10000).toFixed(1);
-  line.innerHTML = `
-    <span style="color:#ffd700">[${new Date().toISOString().split('T')[1].split('.')[0]}]</span>
-    <strong style="color:#ff0066">${data.instrument}</strong>
-    BID <span style="color:#00ff99">${data.bids[0].price}</span>
-    ASK <span style="color:#ff0066">${data.asks[0].price}</span>
-    SPREAD ${change} pips
-  `;
-  document.getElementById('feed').prepend(line);
-  // Limit to 150 lines
-  if (document.getElementById('feed').children.length > 150)
-    document.getElementById('feed').removeChild(document.getElementById('feed').lastChild);
-}
+    // Make every price tick feel like a heartbeat
+    function renderPrice(data) {
+      const line = document.createElement('div');
+      const change = ((data.asks[0].price - data.bids[0].price) / data.bids[0].price * 10000).toFixed(1);
+      line.innerHTML = `
+        <span style="color:#ffd700">[${new Date().toISOString().split('T')[1].split('.')[0]}]</span>
+        <strong style="color:#ff0066">${data.instrument}</strong>
+        BID <span style="color:#00ff99">${data.bids[0].price}</span>
+        ASK <span style="color:#ff0066">${data.asks[0].price}</span>
+        SPREAD ${change} pips
+      `;
+      document.getElementById('feed').prepend(line);
+      // Limit to 150 lines
+      if (document.getElementById('feed').children.length > 150)
+        document.getElementById('feed').removeChild(document.getElementById('feed').lastChild);
+    }
 
     function renderPositions(positions) {
         if (!positions || positions.length === 0) {
@@ -87,7 +96,7 @@ function renderPrice(data) {
 
     function renderPnl(pnl) {
         const totalPnl = (pnl.realized + pnl.unrealized).toFixed(2);
-        totalPnlElement.textContent = `$${totalPnl}`;
+        totalPnlElement.textContent = `${totalPnl}`;
 
         // Example delta calculation - replace with your own logic
         const delta = (Math.random() * 2 - 1).toFixed(2); // Random +/- 1%
@@ -124,5 +133,19 @@ function renderPrice(data) {
         if (tradeElement) {
             tradeElement.remove();
         }
+    }
+
+    // New function to render agent status
+    function renderAgentStatus(agents) {
+        if (!agentGridContainer) return;
+
+        agentGridContainer.innerHTML = ''; // Clear existing static content
+
+        agents.forEach(agent => {
+            const agentDiv = document.createElement('div');
+            agentDiv.className = 'agent';
+            agentDiv.innerHTML = `<span class="orb ${agent.status}"></span>${agent.name}`;
+            agentGridContainer.appendChild(agentDiv);
+        });
     }
 });
